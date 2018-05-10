@@ -36,7 +36,10 @@ final class ApiServiceImpl: ApiService {
             do {
                 let responseModel = try jsonDecoder.decode(ResponseModel.self, from: data!)
                 print("=== JSON Parsed successfully. Objects count:\(responseModel.stock?.count ?? 0)")
-                completion?(responseModel)
+                DispatchQueue.main.async {
+                    completion?(responseModel)
+                }
+                
             } catch {
                 print("==== Error: Could not parse JSON: \(error.localizedDescription)")
             }

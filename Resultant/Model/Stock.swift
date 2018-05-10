@@ -18,7 +18,7 @@ struct Stock : Codable {
 	init(from decoder: Decoder) throws {
 		let values = try decoder.container(keyedBy: CodingKeys.self)
 		name = try values.decodeIfPresent(String.self, forKey: .name)
-		price = try Price(from: decoder)
+		price = try values.decodeIfPresent(Price.self, forKey: .price)
 		percentChange = try values.decodeIfPresent(Double.self, forKey: .percentChange)
 		volume = try values.decodeIfPresent(Int.self, forKey: .volume)
 		symbol = try values.decodeIfPresent(String.self, forKey: .symbol)
