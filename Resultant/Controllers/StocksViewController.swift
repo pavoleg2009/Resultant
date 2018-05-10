@@ -18,9 +18,12 @@ class StocksViewController: UIViewController {
     let apiService: ApiService = ApiServiceImpl()
     var stocks: [Stock] = []
     var asOf: String?
+    var refreshTimer = Timer()
+    let refreshInterval: TimeInterval = 15
     
     private func updateView() {
         tableView.reloadData()
+        UIApplication.shared.isNetworkActivityIndicatorVisible = false
     }
 }
 
@@ -29,7 +32,14 @@ extension StocksViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        addRefreshButton()
+        refresh()
+        startRefreshTimer()
+    }
+    
+
+    @objc private func refresh() {
+        UIApplication.shared.isNetworkActivityIndicatorVisible = true
         apiService.fetchRates { [weak self] (responseModel) in
             
             guard let sself = self else { return }
@@ -41,10 +51,19 @@ extension StocksViewController {
             sself.stocks = fetchedStocks
             sself.asOf = asOf
             sself.updateView()
-            
         }
     }
-
+    
+    private func addRefreshButton(){
+        let refreshButton = UIBarButtonItem(title: "Refresh", style: UIBarButtonItemStyle.plain, target: self, action: #selector(refresh))
+        navigationItem.rightBarButtonItem = refreshButton
+    }
+    
+    private func startRefreshTimer(){
+        refreshTimer = Timer.scheduledTimer(withTimeInterval: refreshInterval, repeats: true, block: { (timer) in
+            self.refresh()
+        })
+    }
 }
 
 

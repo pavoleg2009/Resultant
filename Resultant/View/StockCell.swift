@@ -39,5 +39,4 @@ class StockCell: UITableViewCell {
         volumeLabel.text = "Volume: \(String(stock.volume ?? -1))"
         amountLabel.text = "Amount: \(String(format: "%.2f", stock.price?.amount ?? 0.0))"
     }
-    
 }
